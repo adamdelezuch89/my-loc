@@ -31,7 +31,7 @@ services:
       - NODE_ENV=development  # Set environment variable for development mode
 
   db:
-    image: postgres:13-alpine
+    image: postgis/postgis:17-3.4
     volumes:
       - dev-db-data:/var/lib/postgresql/data
     environment:

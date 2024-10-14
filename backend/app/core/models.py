@@ -8,6 +8,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
+from django.contrib.gis.db import models as gis_models
 
 
 class UserManager(BaseUserManager):
@@ -44,3 +45,26 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
+
+
+class Road(gis_models.Model):
+    """Road object."""
+
+    ROAD_TYPES = [
+        ("highway", "Highway"),
+        ("street", "Street"),
+        ("track", "Track"),
+    ]
+    name = models.CharField(max_length=255)
+    type = models.CharField(max_length=50, choices=ROAD_TYPES, default="street")
+    geometry = gis_models.GeometryField()
+    description = models.TextField(
+        blank=True, help_text="A brief description of the road"
+    )
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.full_clean()  # Ensure validation is called before saving
+        super().save(*args, **kwargs)

@@ -9,11 +9,35 @@ COPY ./requirements.dev.txt /tmp/requirements.dev.txt
 EXPOSE 8000
 
 ARG DEV=false
+
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
-    apk add --update --no-cache postgresql-client && \
-    apk add --update --no-cache --virtual .tmp-build-deps \
-        build-base postgresql-dev musl-dev && \
+    # Geometry field dependencies:
+    apk add --update --no-cache \
+        build-base \
+        gdal-dev \
+        geos-dev \
+        postgresql-dev \
+        musl-dev \
+        libffi-dev \
+        gcc \
+        libc-dev \
+        linux-headers \
+        python3-dev \
+        bash \
+        g++ \
+        jpeg-dev \
+        zlib-dev \
+        proj-dev \
+        sqlite-dev && \
+    ## end of geometry dependencies
+    apk add --update --no-cache \
+        postgresql-client && \
+    apk add --update --no-cache --virtual \
+        .tmp-build-deps \
+        build-base \
+        postgresql-dev \
+        musl-dev && \
     /py/bin/pip install -r /tmp/requirements.txt && \
     if [ $DEV = "true" ]; \
         then /py/bin/pip install -r /tmp/requirements.dev.txt ; \
@@ -24,9 +48,13 @@ RUN python -m venv /py && \
         --no-create-home \
         django-user
 
+
 COPY ./app /app
 WORKDIR /app
 
 ENV PATH="/py/bin:$PATH"
+
+# Run collectstatic to gather all static files
+RUN python manage.py collectstatic --noinput
 
 USER django-user

@@ -3,7 +3,9 @@ Tests for models.
 """
 
 from django.test import TestCase
+from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+from core import models
 
 
 class ModelTests(TestCase):
@@ -47,3 +49,37 @@ class ModelTests(TestCase):
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+    def test_create_road(self):
+        """Test creating a road is successful."""
+
+        road = models.Road.objects.create(
+            name="Main Street",
+            type="street",
+            geometry="LINESTRING(0 0, 1 1)",
+            description="Sample road description.",
+        )
+
+        self.assertEqual(str(road), road.name)
+
+    def test_create_road_unsupported_type_raises_error(self):
+        """Test creating a road is successful."""
+
+        with self.assertRaises(ValidationError):
+            models.Road.objects.create(
+                name="High Street",
+                type="aaaa",
+                geometry="LINESTRING(0 0, 1 1)",
+                description="Sample road description.",
+            )
+
+    def test_create_road_incorrect_geometry_raises_error(self):
+        """Test creating a road is successful."""
+
+        with self.assertRaises(ValueError):
+            models.Road.objects.create(
+                name="Low Street",
+                type="street",
+                geometry="some wrong data",
+                description="Sample road description.",
+            )
