@@ -20,6 +20,16 @@ services:
     depends_on:
       - db
 
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend:/app  # Mount the current directory to /app in the container for live reloads
+    environment:
+      - NODE_ENV=development  # Set environment variable for development mode
+
   db:
     image: postgres:13-alpine
     volumes:

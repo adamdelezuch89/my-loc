@@ -23,3 +23,7 @@ pip install -r requirements.txt
 ## use
 source venv/bin/activate
 deactivate
+
+# BASH
+## Print frontend file structure
+find . -type d -name 'node_modules' -prune -o -type f -print
