@@ -4,7 +4,9 @@
 docker-compose run --rm app sh -c ""
 ## lint and tests
 docker compose run --rm app sh -c "python manage.py wait_for_db && python manage.py test"
-docker compose run --rm app sh -c "cd app && flake8"
+docker compose run --rm app sh -c "flake8"
+## make migrations
+docker compose run --rm app sh -c "python manage.py makemigrations"
 ## new project
 docker compose run --rm app sh -c "django-admin startproject app ."
 ## new app
