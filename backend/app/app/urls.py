@@ -1,6 +1,5 @@
 """
 URL configuration for app project.
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
 Examples:
@@ -21,7 +20,7 @@ from drf_spectacular.views import (
 )
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -31,4 +30,5 @@ urlpatterns = [
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
+    path("api/user/", include("user.urls")),
 ]
