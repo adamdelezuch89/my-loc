@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-3ufjz*9g+-!ewz81)wosmpzabw7(iuugm32p1^0(f)2ptf*ufl"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"] # TODO: Specify correct hosts
 
 
 # Application definition
@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "core",
     "user",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -146,3 +148,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "core/static"),
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True # TODO Set correct origins
