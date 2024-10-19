@@ -5,12 +5,15 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { UserInterface } from './user.interface';
 import { Router } from '@angular/router';
+import { MapComponent } from './map/map.component';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink],
+  imports: [CommonModule, RouterOutlet, RouterLink, MapComponent],
   templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   authService = inject(AuthService);

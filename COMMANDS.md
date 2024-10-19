@@ -15,6 +15,8 @@ docker compose run --rm backend sh -c "django-admin startproject app ."
 docker compose run --rm backend sh -c "python manage.py startapp core"
 ## new superuser
 docker compose run --rm backend sh -c "python manage.py createsuperuser"
+## collectstatic
+docker compose run --rm backend sh -c "python manage.py collectstatic"
 ## console access
 docker exec -it <container_name> /bin/sh
 

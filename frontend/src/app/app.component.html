@@ -7,3 +7,7 @@
   <span (click)="logout()">Logout</span>
 </div>
 <router-outlet></router-outlet>
+<!-- Conditionally display the map component -->
+<div *ngIf="authService.currentUserSig()">
+  <app-map></app-map> <!-- Replace 'app-map' with your actual map component selector -->
+</div>
