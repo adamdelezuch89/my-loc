@@ -50,19 +50,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class Road(gis_models.Model):
-    """Road object."""
+class River(gis_models.Model):
+    """River object."""
 
-    ROAD_TYPES = [
-        ("highway", "Highway"),
-        ("street", "Street"),
-        ("track", "Track"),
+    RIVER_TYPES = [
+        ("lake", "Lake"),
+        ("river", "River"),
     ]
     name = models.CharField(max_length=255)
-    type = models.CharField(max_length=50, choices=ROAD_TYPES, default="street")
+    type = models.CharField(max_length=50, choices=RIVER_TYPES, default="river")
     geometry = gis_models.GeometryField()
     description = models.TextField(
-        blank=True, help_text="A brief description of the road"
+        blank=True, help_text="A brief description of the river"
     )
 
     def __str__(self):
@@ -84,15 +83,15 @@ class POIType(models.Model):
 
 class POIManager(models.Manager):
     def calculate_nearest_point(self, poi):
-        # Ensure road geometry and coordinates are valid
-        if poi.road.geometry and poi.coordinates:
-            # Calculate the nearest point on the road geometry
-            return poi.road.geometry.interpolate(
-                poi.road.geometry.project(poi.coordinates)
+        # Ensure river geometry and coordinates are valid
+        if poi.river.geometry and poi.coordinates:
+            # Calculate the nearest point on the river geometry
+            return poi.river.geometry.interpolate(
+                poi.river.geometry.project(poi.coordinates)
             )
         raise ValueError(
-            "Road and coordinates must be defined to calculate \
-            the nearest point on road."
+            "River and coordinates must be defined to calculate \
+            the nearest point on river."
         )
 
 
@@ -102,8 +101,8 @@ class POI(gis_models.Model):
     name = models.CharField(max_length=255)
     type = models.ForeignKey(POIType, on_delete=models.CASCADE)
     coordinates = gis_models.PointField()
-    road = models.ForeignKey(Road, on_delete=models.CASCADE)
-    nearest_point_on_road = gis_models.PointField(null=False)
+    river = models.ForeignKey(River, on_delete=models.CASCADE)
+    nearest_point_on_river = gis_models.PointField(null=False)
     is_public = models.BooleanField(default=False)
     is_approved = models.BooleanField(default=False)
     description = models.TextField(
@@ -119,7 +118,7 @@ class POI(gis_models.Model):
 
     def save(self, *args, **kwargs):
         # Use the manager to calculate the nearest point
-        self.nearest_point_on_road = POI.objects.calculate_nearest_point(self)
+        self.nearest_point_on_river = POI.objects.calculate_nearest_point(self)
 
         # Validate and save
         self.full_clean()

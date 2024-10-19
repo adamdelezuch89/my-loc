@@ -31,7 +31,7 @@ export class MapComponent implements OnInit {
   }
 
   private loadRoads(): void {
-    this.http.get<{ type: string; features: any[] }>('http://localhost:8000/api/road/roads/').subscribe((data) => {
+    this.http.get<{ type: string; features: any[] }>('http://localhost:8000/api/river/rivers/').subscribe((data) => {
       this.addRoadsToMap(data.features);
     });
   }

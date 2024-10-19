@@ -51,11 +51,11 @@ class UserAdmin(BaseUserAdmin):
     )
 
 
-class RoadAdmin(gis_admin.GISModelAdmin):
+class RiverAdmin(gis_admin.GISModelAdmin):
     # TODO: Parameters are not taken into consideration. fix it later
     # TODO: Fix js errors too
     # TODO: Make sure, if geometry changes, reacalculate all
-    # related objects - points, other roads
+    # related objects - points, other rivers
 
     default_lon = 21.0122  # Longitude for Warsaw
     default_lat = 52.2297  # Latitude for Warsaw
@@ -96,7 +96,7 @@ class POIAdmin(gis_admin.GISModelAdmin, admin.ModelAdmin):
     list_display = [
         "name",
         "type",
-        "road",
+        "river",
         "author",
         "is_public",
         "is_approved",
@@ -106,11 +106,11 @@ class POIAdmin(gis_admin.GISModelAdmin, admin.ModelAdmin):
         "is_public",
         "is_approved",
         "author",
-        "road",
+        "river",
     ]
 
     search_fields = ["name"]
-    readonly_fields = ["nearest_point_on_road"]
+    readonly_fields = ["nearest_point_on_river"]
 
     # Default values for fields that should not require input
     def get_form(self, request, obj=None, **kwargs):
@@ -124,9 +124,9 @@ class POIAdmin(gis_admin.GISModelAdmin, admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         """Override save_model to handle nearest point recalculation."""
-        # If coordinates or road have changed, recalculate nearest_point_on_road
-        if "coordinates" in form.changed_data or "road" in form.changed_data:
-            obj.nearest_point_on_road = models.POI.objects.calculate_nearest_point(obj)
+        # If coordinates or river have changed, recalculate nearest_point_on_river
+        if "coordinates" in form.changed_data or "river" in form.changed_data:
+            obj.nearest_point_on_river = models.POI.objects.calculate_nearest_point(obj)
 
         # Call the superclass method to save the object
         super().save_model(request, obj, form, change)
@@ -139,4 +139,4 @@ class POIAdmin(gis_admin.GISModelAdmin, admin.ModelAdmin):
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.POI, POIAdmin)
 admin.site.register(models.POIType, POITypeAdmin)
-admin.site.register(models.Road, RoadAdmin)
+admin.site.register(models.River, RiverAdmin)

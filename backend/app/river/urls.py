@@ -1,5 +1,5 @@
 """
-URL mappings for the road app.
+URL mappings for the river app.
 """
 
 from django.urls import (
@@ -9,13 +9,13 @@ from django.urls import (
 
 from rest_framework.routers import DefaultRouter
 
-from road import views
+from river import views
 
 
 router = DefaultRouter()
-router.register("roads", views.RoadViewSet)
+router.register("rivers", views.RiverViewSet)
 
-app_name = "road"
+app_name = "river"
 
 urlpatterns = [
     path("", include(router.urls)),

@@ -52,39 +52,39 @@ class UserModelTests(TestCase):
         self.assertTrue(user.is_staff)
 
 
-class RoadModelTests(TestCase):
-    def test_create_road(self):
-        """Test creating a road is successful."""
+class RiverModelTests(TestCase):
+    def test_create_river(self):
+        """Test creating a river is successful."""
 
-        road = models.Road.objects.create(
-            name="Main Street",
-            type="street",
+        river = models.River.objects.create(
+            name="Main River",
+            type="river",
             geometry="LINESTRING(0 0, 1 1)",
-            description="Sample road description.",
+            description="Sample river description.",
         )
 
-        self.assertEqual(str(road), road.name)
+        self.assertEqual(str(river), river.name)
 
-    def test_create_road_unsupported_type_raises_error(self):
-        """Test creating a road is successful."""
+    def test_create_river_unsupported_type_raises_error(self):
+        """Test creating a river is successful."""
 
         with self.assertRaises(ValidationError):
-            models.Road.objects.create(
-                name="High Street",
+            models.River.objects.create(
+                name="High River",
                 type="aaaa",
                 geometry="LINESTRING(0 0, 1 1)",
-                description="Sample road description.",
+                description="Sample river description.",
             )
 
-    def test_create_road_incorrect_geometry_raises_error(self):
-        """Test creating a road is successful."""
+    def test_create_river_incorrect_geometry_raises_error(self):
+        """Test creating a river is successful."""
 
         with self.assertRaises(ValueError):
-            models.Road.objects.create(
-                name="Low Street",
-                type="street",
+            models.River.objects.create(
+                name="Low River",
+                type="river",
                 geometry="some wrong data",
-                description="Sample road description.",
+                description="Sample river description.",
             )
 
 
@@ -111,14 +111,14 @@ class POITypeTests(TestCase):
 
 class POITests(TestCase):
     def setUp(self):
-        """Set up a user, a road, and a POIType for testing."""
+        """Set up a user, a river, and a POIType for testing."""
         self.user = models.User.objects.create_user(
             email="test@example.com",
             password="testpass123",
         )
-        self.road = models.Road.objects.create(
-            name="Main St",
-            type="street",
+        self.river = models.River.objects.create(
+            name="Maine",
+            type="river",
             geometry=LineString(Point(0, 0), Point(2, 2)),
         )
         self.poi_type = models.POIType.objects.create(name="Restaurant")
@@ -129,7 +129,7 @@ class POITests(TestCase):
             name="Pizza Place",
             type=self.poi_type,
             coordinates=Point(1, 1),
-            road=self.road,
+            river=self.river,
             author=self.user,
         )
         self.assertEqual(poi.name, "Pizza Place")
@@ -140,15 +140,15 @@ class POITests(TestCase):
             models.POI.objects.create(
                 name="Missing Coordinates",
                 type=self.poi_type,
-                road=self.road,
+                river=self.river,
                 author=self.user,
             )
 
-    def test_missing_road(self):
-        """Test that creating a POI without a road raises a ValidationError."""
-        with self.assertRaises(models.POI.road.RelatedObjectDoesNotExist):
+    def test_missing_river(self):
+        """Test that creating a POI without a river raises a ValidationError."""
+        with self.assertRaises(models.POI.river.RelatedObjectDoesNotExist):
             models.POI.objects.create(
-                name="Missing Road",
+                name="Missing River",
                 type=self.poi_type,
                 coordinates=Point(1, 1),
                 author=self.user,
@@ -162,22 +162,22 @@ class POITests(TestCase):
                 name="Invalid POI",
                 type=self.poi_type,
                 coordinates="INVALID COORDINATES",  # Invalid type
-                road=self.road,
+                river=self.river,
                 author=self.user,
             )
 
     def test_nearest_point_calculation(self):
-        """Test that nearest_point_on_road is correctly calculated."""
+        """Test that nearest_point_on_river is correctly calculated."""
         poi = models.POI.objects.create(
             name="Pizza Place",
             type=self.poi_type,
             coordinates=Point(1, 1),
-            road=self.road,
+            river=self.river,
             author=self.user,
         )
-        nearest_point = poi.nearest_point_on_road
-        expected_nearest_point = self.road.geometry.interpolate(
-            self.road.geometry.project(poi.coordinates)
+        nearest_point = poi.nearest_point_on_river
+        expected_nearest_point = self.river.geometry.interpolate(
+            self.river.geometry.project(poi.coordinates)
         )
         self.assertEqual(nearest_point.x, expected_nearest_point.x)
         self.assertEqual(nearest_point.y, expected_nearest_point.y)

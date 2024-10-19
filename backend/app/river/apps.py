@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class RoadConfig(AppConfig):
+class RiverConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'road'
+    name = 'river'

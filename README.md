@@ -1,4 +1,4 @@
-# README for Trekking Planning Application
+# README for River Trip Application
 
 ## Table of Contents
 - [Project Overview](#project-overview)
@@ -16,7 +16,7 @@
 ---
 
 ## Project Overview
-This project is a trekking planning application built with Django and React. It allows users to add and manage Points of Interest along designated roads. The application provides an interactive map interface to visualize the geographical data effectively.
+This project is a river trip planning application built with Django and React. It allows users to add and manage Points of Interest along designated rivers. The application provides an interactive map interface to visualize the geographical data effectively.
 
 ## Features
 TODO
