@@ -19,16 +19,21 @@ services:
       - DB_PASS=${DB_PASS}
     depends_on:
       - db
+    networks:
+      - myloc-network
 
   frontend:
     build:
       context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - '3000:3000'
+      - "4200:4200"
     volumes:
-      - ./frontend:/app  # Mount the current directory to /app in the container for live reloads
-    environment:
-      - NODE_ENV=development  # Set environment variable for development mode
+      - ./frontend:/app  
+    networks:
+      - myloc-network
+    depends_on:
+      - backend
 
   db:
     image: postgis/postgis:17-3.4
@@ -38,6 +43,12 @@ services:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
+    networks:
+      - myloc-network
 
 volumes:
   dev-db-data:
+
+networks:
+  myloc-network:
+    driver: bridge

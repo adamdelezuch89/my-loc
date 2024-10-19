@@ -1,23 +1,14 @@
-# Use Node.js as the base image
-FROM node:18-alpine
+FROM node:18 AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy only package.json and package-lock.json to leverage caching
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
-# Install dependencies
-RUN npm install --production
+RUN npm install -g @angular/cli
 
-# Copy the rest of the application code
-COPY . .
+RUN npm install
 
-# Build the application (optional, if you want to serve a production build)
-RUN npm run build
+EXPOSE 4200
 
-# Expose port 3000 for the app
-EXPOSE 3000
+CMD ["ng", "serve", "--host", "0.0.0.0"]
 
-# Start the application
-CMD ["npm", "start"]
